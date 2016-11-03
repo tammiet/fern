@@ -172,7 +172,10 @@ using System.Windows.Shapes;
             {
                 canvas.Children.Clear();                                // delete old canvas contents
                                                                         // draw a new fern at the center of the canvas with given parameters
-                cluster((int)(canvas.Width / 2), (int)(canvas.Height * .75), 50, redux, turnbias, canvas);
+                cluster((int)(canvas.Width / 2), (int)(canvas.Height * .75), 20, redux, turnbias, canvas);
+                //cluster((int)(canvas.Width / 2), (int)(canvas.Height * .75), 50, redux, turnbias-100, canvas);
+                Console.Write("canvas width/2: " + (int)(canvas.Width / 2));
+                Console.Write("canvas height * .75: " + canvas.Height * .75);
                 line((int)(canvas.Width / 2), (int)(canvas.Height * .75), (int)(canvas.Width / 2) + 10, 10, 34, 139,34, 2.0, canvas);
         }
 
@@ -187,9 +190,10 @@ using System.Windows.Shapes;
                     // compute the angle of the outgoing tendril
                     double theta = i * 2* Math.PI / TENDRILS;
                     tendril(x, y, (size*.8), redux, turnbias, theta, canvas);
-                    //if (size > BERRYMIN)
-                    //   berry(x, y, 5, canvas);
-                }
+
+                //if (size > BERRYMIN)
+                //   berry(x, y, 5, canvas);
+            }
             }
 
             /*
@@ -200,35 +204,48 @@ using System.Windows.Shapes;
             {
                 int x2 = x1, y2 = y1;
                 Random random = new Random();
-                //direction +=  DELTATHETA;
                 direction += (random.NextDouble() > turnbias) ? -1 * DELTATHETA : DELTATHETA;
                 x1 = x2; y1 = y2;
                 x2 = x1 + (int)(SEGLENGTH * Math.Sin(direction));
                 y2 = y1 + (int)(SEGLENGTH * -direction);
                
                 line(x1, y1, x2, y2, 34, 139, 34, 1 + (size / 80), canvas);
-               
-                for (int i = 0; i < size-1; i++)
+
+
+            for (int i = 0; i < size; i++)
+            {
+                direction += (random.NextDouble() > turnbias) ? -1 * DELTATHETA : DELTATHETA;
+                //if (direction < 0)
+                
+                x1 = x2; y1 = y2;
+                x2 = x1 + (int)(SEGLENGTH * Math.Sin(direction));
+                y2 = y1 + (int)(SEGLENGTH * -direction);
+                if (y2 < 200)
                 {
-                    direction += (random.NextDouble() > turnbias) ? -1 * DELTATHETA : DELTATHETA;
-                    //direction += (1 > turnbias) ? -1 * DELTATHETA : DELTATHETA;
-                    x1 = x2; y1 = y2;
+                    x1 = 320;
                     x2 = x1 + (int)(SEGLENGTH * Math.Sin(direction));
+                    y1 = 360;
                     y2 = y1 + (int)(SEGLENGTH * -direction);
-                    byte red = (byte)(100 + size / 2);
-                    byte green = (byte)(220 - size / 3);
-                    //if (size>120) red = 138; green = 108;
-                    //if (y2 > (int)(canvas.Height * .75))
-                    //if (y2 > y1)
-                    //{
-                    // y2 = (y2 - y1)+ 140;
-                    //}
-                    line(x1, y1, x2, y2, red, green, 0, 1 + (size / 80), canvas);
-                    line(-x1, y1, -x2, y2, red, green, 0, 1 + (size / 80), canvas); //constructs tendrils on te opposite side
-                    }
-                    if (size > TENDRILMIN)
-                        cluster(x2, y2, size / redux, redux, turnbias, canvas);
-                 }
+                }
+                byte red = (byte)(100 + size / 2);
+                byte green = (byte)(220 - size / 3);
+                //if (size>120) red = 138; green = 108;
+                //if (y2 > (int)(canvas.Height * .75))
+                Console.Write("y2 is " + y2 + "\n");
+                Console.Write("direction is " + direction + "\n");
+                Console.Write("Y1 is " + y1 + "\n");
+                
+                if (y2 > y1)
+                {
+                    y2 = (y2 - y1) + 140;
+                }
+                line(x1, y1, x2, y2, red, green, 0, 1 + (size / 80), canvas);
+                //line(x1, y1, x2-2, y2, red, green, 0, 1 + (size / 80), canvas); //constructs tendrils on te opposite side
+            }
+
+            if (size > TENDRILMIN)
+                            cluster(x2, y2, size / redux, redux, turnbias, canvas);
+                     }
 
             /*
              * draw a red circle centered at (x,y), radius radius, with a black edge, onto canvas

@@ -25,7 +25,7 @@ namespace FernNamespace
             InitializeComponent();
         }
 
-
+       
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
             Fern f = new Fern(sizeSlider.Value, reduxSlider.Value, biasSlider.Value, canvas);
@@ -36,6 +36,7 @@ namespace FernNamespace
         {
             Fern f = new Fern(sizeSlider.Value, reduxSlider.Value, biasSlider.Value, canvas);
         }
+
     }
 
 }
